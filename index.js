@@ -3,12 +3,40 @@ const express = require("express");
 const app = express();
 app.use(express.json());
 
+// In-memory storage
 const users = [];
 
+// Home route
+app.get("/", (req, res) => {
+  const baseUrl = `${req.protocol}://${req.get("host")}`;
+
+  res.json({
+    message: "Simple User API is running",
+    endpoints: [
+      {
+        method: "GET",
+        url: `${baseUrl}/users`,
+        description: "Retrieve all users",
+      },
+      {
+        method: "POST",
+        url: `${baseUrl}/users`,
+        description: "Add a new user",
+        body: {
+          name: "string",
+          email: "string",
+        },
+      },
+    ],
+  });
+});
+
+// GET all users
 app.get("/users", (req, res) => {
   res.json(users);
 });
 
+// POST a new user
 app.post("/users", (req, res) => {
   const { name, email } = req.body;
 
@@ -29,12 +57,6 @@ app.post("/users", (req, res) => {
   res.status(201).json({
     message: "User added successfully",
     user,
-  });
-});
-
-app.get("/", (req, res) => {
-  res.json({
-    message: "REST API Running",
   });
 });
 
