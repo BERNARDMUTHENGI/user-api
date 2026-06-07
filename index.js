@@ -3,8 +3,24 @@ const express = require("express");
 const app = express();
 app.use(express.json());
 
-// In-memory storage
-const users = [];
+// In-memory data
+const users = [
+  {
+    id: 1,
+    name: "John Doe",
+    email: "john@example.com",
+  },
+  {
+    id: 2,
+    name: "Jane Smith",
+    email: "jane@example.com",
+  },
+  {
+    id: 3,
+    name: "Bernard Muthengi",
+    email: "bernard@example.com",
+  },
+];
 
 // Home route
 app.get("/", (req, res) => {
@@ -12,6 +28,8 @@ app.get("/", (req, res) => {
 
   res.json({
     message: "Simple User API is running",
+    description:
+      "A basic REST API built with Express.js that stores user data in memory.",
     endpoints: [
       {
         method: "GET",
@@ -22,18 +40,19 @@ app.get("/", (req, res) => {
         method: "POST",
         url: `${baseUrl}/users`,
         description: "Add a new user",
-        body: {
-          name: "string",
-          email: "string",
+        sampleRequest: {
+          name: "Alice Johnson",
+          email: "alice@example.com",
         },
       },
     ],
+    sampleUsersCount: users.length,
   });
 });
 
 // GET all users
 app.get("/users", (req, res) => {
-  res.json(users);
+  res.status(200).json(users);
 });
 
 // POST a new user
@@ -46,17 +65,17 @@ app.post("/users", (req, res) => {
     });
   }
 
-  const user = {
+  const newUser = {
     id: users.length + 1,
     name,
     email,
   };
 
-  users.push(user);
+  users.push(newUser);
 
   res.status(201).json({
     message: "User added successfully",
-    user,
+    user: newUser,
   });
 });
 
